@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FearLab — Dance Battle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wide">
+    <header>
+      <h1>Dance Battle</h1>
+      <nav><a href="index.html">← All games</a></nav>
+      <span id="status" class="pill">Loading…</span>
+    </header>
+
+    <section id="modes" class="challenges"></section>
+    <p id="prompt" class="prompt"></p>
+
+    <div class="stage">
+      <video id="video" playsinline muted hidden></video>
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <section class="controls">
+      <button id="start" class="primary" disabled>Start dancing!</button>
+      <label>Dancers
+        <select id="players">
+          <option>1</option><option selected>2</option><option>3</option><option>4</option>
+        </select>
+      </label>
+      <label>Time
+        <select id="seconds">
+          <option value="15">15s</option><option value="20" selected>20s</option>
+          <option value="30">30s</option><option value="45">45s</option>
+        </select>
+      </label>
+      <label><input id="music" type="checkbox" checked> Built-in beat (untick if playing your own music)</label>
+    </section>
+
+    <section id="results" class="results"></section>
+
+    <p class="muted small">Stand back so the camera sees your whole body. Dancers are numbered left to right; only the
+      dancers closest to the camera are scored, so people watching from further back don't count.
+      Everything runs on this computer. Nothing is recorded.</p>
+  </main>
+  <script type="module" src="dance.js"></script>
+</body>
+</html>

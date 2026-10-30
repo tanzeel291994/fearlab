@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FearLab — Polygraph</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wide">
+    <header>
+      <h1>Polygraph</h1>
+      <nav><a href="index.html">← All games</a></nav>
+      <span id="status" class="pill">Loading…</span>
+    </header>
+
+    <section id="setup" class="panel setup">
+      <h2>Who's in the hot seat?</h2>
+      <input id="name" placeholder="Player name" autocomplete="off" list="dossier-names">
+      <datalist id="dossier-names"></datalist>
+      <div class="row">
+        <label>Spice
+          <select id="spice">
+            <option value="mild">Mild: grandma-safe</option>
+            <option value="spicy" selected>Spicy</option>
+            <option value="savage">Savage roast</option>
+          </select>
+        </label>
+        <label>Hot-seat questions
+          <select id="rounds"><option>3</option><option selected>5</option><option>8</option></select>
+        </label>
+      </div>
+      <div class="row">
+        <button id="hr-connect">Connect WHOOP</button>
+        <button id="hr-demo">Demo heart</button>
+        <span id="hr-status" class="muted">Heart sensor optional</span>
+      </div>
+      <div class="row">
+        <button id="begin" class="primary" disabled>Start interrogation</button>
+        <a href="dossier.html" target="_blank" class="muted small">🗂 Secret dossiers</a>
+      </div>
+    </section>
+
+    <div class="poly">
+      <aside class="poly-side">
+        <video id="video" playsinline muted hidden></video>
+        <canvas id="cam"></canvas>
+        <div class="gauge"><div id="needle" class="needle"></div></div>
+        <canvas id="trace" class="trace" width="680" height="200"></canvas>
+        <div class="trace-legend"><span class="pen-hr">heart</span><span class="pen-voice">voice</span><span class="pen-stress">stress</span></div>
+        <div class="readout">
+          <div><span class="muted">Heart</span> <b id="bpm">--</b></div>
+          <div><span class="muted">Stress</span> <b id="stress">--</b></div>
+        </div>
+        <ul id="tells" class="tells"></ul>
+      </aside>
+
+      <section class="poly-main panel">
+        <div id="phase" class="phase muted">Waiting for a suspect…</div>
+        <div id="title" class="suspect-title"></div>
+        <p id="host-line" class="host-line"></p>
+        <p id="question" class="question"></p>
+        <div id="stamp" class="stamp" hidden></div>
+        <textarea id="answer" rows="2" placeholder="The answer shows up here as they speak. You can also type it."></textarea>
+        <div class="row">
+          <span id="listen-hint" class="listen-hint" hidden>🎙 Listening… the machine moves on when you stop talking</span>
+          <button id="done" disabled>Done <kbd>Space</kbd></button>
+          <button id="pass" disabled>Pass</button>
+        </div>
+        <ol id="history" class="history"></ol>
+      </section>
+    </div>
+
+    <section id="report" class="panel report" hidden>
+      <h2>Polygraph report</h2>
+      <div id="report-title" class="suspect-title"></div>
+      <div class="honesty"><span>Honesty</span><div class="bar"><i id="honesty-bar"></i></div><b id="honesty"></b></div>
+      <p id="report-text"></p>
+      <figure id="exhibit" class="exhibit" hidden>
+        <div class="exhibit-photo"><canvas id="exhibit-photo"></canvas><span id="exhibit-stamp" class="stamp"></span></div>
+        <figcaption id="exhibit-caption"></figcaption>
+      </figure>
+      <table id="report-table"></table>
+      <button id="again" class="primary">Next suspect</button>
+    </section>
+
+    <p class="muted small">Just for laughs: none of these signals can really detect lies. Video and audio stay on this computer.
+      Only the answer text and the machine's verdict are sent to Claude to write the host's lines.</p>
+  </main>
+  <script type="module" src="polygraph.js"></script>
+</body>
+</html>

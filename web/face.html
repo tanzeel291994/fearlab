@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FearLab — Face Challenge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wide">
+    <header>
+      <h1>Face Challenge</h1>
+      <nav><a href="index.html">← All games</a></nav>
+      <span id="status" class="pill">Loading…</span>
+    </header>
+
+    <section id="challenges" class="challenges"></section>
+    <p id="prompt" class="prompt"></p>
+
+    <div class="stage">
+      <video id="video" playsinline muted hidden></video>
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <section class="controls">
+      <button id="start" class="primary" disabled>Start round</button>
+      <label><input id="speak" type="checkbox" checked> Read jokes aloud</label>
+      <label><input id="debug" type="checkbox"> Show face data</label>
+    </section>
+
+    <section id="results" class="results"></section>
+    <section id="debug-panel" class="debug" hidden></section>
+
+    <p class="muted small">Everything runs on this computer. No video or photos are uploaded or saved.</p>
+  </main>
+  <script type="module" src="face.js"></script>
+</body>
+</html>

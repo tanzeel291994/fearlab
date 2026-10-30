@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FearLab — Heart Rate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>FearLab</h1>
+      <nav><a href="index.html">← All games</a></nav>
+      <span id="status" class="pill">Not connected</span>
+    </header>
+
+    <section class="hr">
+      <div id="heart" class="heart">❤</div>
+      <div><span id="bpm" class="bpm">--</span><span class="unit">BPM</span></div>
+      <div id="baseline" class="muted">Baseline: warming up…</div>
+    </section>
+
+    <canvas id="chart" height="140"></canvas>
+
+    <section class="controls">
+      <button id="connect" class="primary">Connect WHOOP</button>
+      <button id="demo">Demo mode</button>
+      <button id="disconnect" hidden>Disconnect</button>
+      <button id="fake-spike" hidden>Fake a spike</button>
+    </section>
+
+    <section class="detector">
+      <h2>Lie detector test</h2>
+      <p class="muted">Ask a question, press start, press stop when they finish answering.</p>
+      <button id="answer" disabled>Start answer</button>
+      <div id="verdict" class="verdict" hidden></div>
+    </section>
+
+    <p id="unsupported" class="warn" hidden>
+      This browser has no Web Bluetooth. Open this page in Chrome (or Edge) on your Mac.
+    </p>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

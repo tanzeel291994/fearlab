@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FearLab — Secret Dossiers</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wide">
+    <header>
+      <h1>🗂 Secret Dossiers</h1>
+      <nav><a href="polygraph.html">Polygraph →</a></nav>
+      <span class="pill">Top secret</span>
+    </header>
+    <p class="muted">Fill these in before the player sits down. The interrogator uses them to ask uncomfortably
+      well-informed questions and never reveals where the intel came from. The player's name in the polygraph has to
+      match the name here.</p>
+
+    <section class="panel dossier-form">
+      <input id="name" placeholder="Player's name, as you'll type it in the polygraph" autocomplete="off" list="names">
+      <datalist id="names"></datalist>
+      <div class="chips" id="chips"></div>
+      <textarea id="notes" rows="8" placeholder="Relationship: single, but keeps 'accidentally' liking their ex's photos
+Manager: Dave, who they impersonate at every party
+Evil friend: Priya, who knows everything
+Embarrassing story: fell asleep at their own birthday dinner
+Inside joke: the Great Lasagna Incident of 2023"></textarea>
+      <div class="row">
+        <button id="save" class="primary">Save dossier</button>
+        <button id="clear">New</button>
+        <span id="saved" class="muted"></span>
+      </div>
+    </section>
+
+    <section id="list" class="dossier-list"></section>
+
+    <p class="muted small">Dossiers are stored on this computer in .cache/dossiers.json. The notes are sent to Claude
+      only when that player starts a polygraph game. Keep it fun: the interrogator skips health, money, religion,
+      politics, sexuality and anything that could get someone in real trouble.</p>
+  </main>
+
+  <script type="module">
+    const $ = id => document.getElementById(id);
+    const CHIPS = ['Relationship', 'Crush', 'Ex', 'Job / manager', 'Best friend', 'Evil friend',
+      'Embarrassing story', 'Guilty pleasure', 'Bad habit', 'Inside joke', 'Ask them about'];
+
+    $('chips').replaceChildren(...CHIPS.map(label => {
+      const b = document.createElement('button');
+      b.textContent = `+ ${label}`;
+      b.onclick = () => {
+        const notes = $('notes');
+        notes.value = `${notes.value.trimEnd()}${notes.value.trim() ? '\n' : ''}${label}: `;
+        notes.focus();
+        notes.setSelectionRange(notes.value.length, notes.value.length);
+      };
+      return b;
+    }));
+
+    async function refresh() {
+      const dossiers = await (await fetch('/api/dossiers')).json();
+      $('names').replaceChildren(...dossiers.map(d => Object.assign(document.createElement('option'), { value: d.name })));
+      $('list').replaceChildren(...dossiers.map(d => {
+        const card = document.createElement('div');
+        card.className = 'card dossier-card';
+        card.innerHTML = '<div class="score"></div><pre></pre><div class="row"><button class="edit">Edit</button><button class="delete">Delete</button></div>';
+        card.querySelector('.score').textContent = `📁 ${d.name}`;
+        card.querySelector('pre').textContent = d.notes;
+        card.querySelector('.edit').onclick = () => {
+          $('name').value = d.name;
+          $('notes').value = d.notes;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        card.querySelector('.delete').onclick = async () => {
+          await save(d.name, '');
+          refresh();
+        };
+        return card;
+      }));
+    }
+
+    async function save(name, notes) {
+      const res = await fetch('/api/dossiers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, notes }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
+    }
+
+    $('save').onclick = async () => {
+      const name = $('name').value.trim();
+      if (!name) return $('name').focus();
+      await save(name, $('notes').value);
+      $('saved').textContent = `Saved ${name}'s dossier.`;
+      setTimeout(() => ($('saved').textContent = ''), 2500);
+      refresh();
+    };
+
+    // Typing a name that already has a dossier loads it for editing.
+    $('name').addEventListener('change', async () => {
+      const dossiers = await (await fetch('/api/dossiers')).json();
+      const match = dossiers.find(d => d.name.toLowerCase() === $('name').value.trim().toLowerCase());
+      if (match) $('notes').value = match.notes;
+    });
+
+    $('clear').onclick = () => {
+      $('name').value = $('notes').value = '';
+      $('name').focus();
+    };
+
+    refresh();
+  </script>
+</body>
+</html>
